@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import landingImage from "../assets/images/landingImage.png";
 import SignIn from "../components/SignIn";
+import SignUp from "../components/SignUp";
 
 const LandingPage = () => {
+  const [signIn, setSignIn] = useState(true);
+
   return (
     <div className="h-screen p-12">
       <div className="bg-[#F0F0F0] flex h-full rounded-[48px] border-2 shadow-2xl">
@@ -17,7 +20,11 @@ const LandingPage = () => {
             <h3 className="text-2xl text-gray-500 mb-10">
               Welcome to Live2Fullest
             </h3>
-            <SignIn />
+            {signIn ? (
+              <SignIn onSwitch={() => setSignIn(false)} />
+            ) : (
+              <SignUp onSwitch={() => setSignIn(true)} />
+            )}
           </div>
         </div>
       </div>
