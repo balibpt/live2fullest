@@ -1,7 +1,61 @@
 import React, { useState } from "react";
 import GoogleIcon from "../assets/icons/GoogleIcon.js";
+import { db, auth } from "../firebase-config.js";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { collection, addDoc } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
 
 const SignUp = ({ onSwitch }) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+
+  const navigate = useNavigate();
+
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+  };
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+  };
+
+  const handleFirstNameChange = (e) => {
+    setFirstName(e.target.value);
+  };
+
+  const handleLastNameChange = (e) => {
+    setLastName(e.target.value);
+  };
+
+  const usersCollection = collection(db, "users");
+  const addUser = async (user) => {
+    await addDoc(usersCollection, user);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Handle form submission logic here
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        addUser({
+          uid: user.uid,
+          firstName: firstName,
+          lastName: lastName,
+          email: user.email,
+        });
+      })
+      .then(() => {
+        console.log("User created successfully");
+        navigate("/home");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   return (
     <React.Fragment>
       <div className="w-3/4">
@@ -9,6 +63,7 @@ const SignUp = ({ onSwitch }) => {
           <div className="relative z-0 w-full mb-5 group">
             <input
               type="text"
+              onChange={handleFirstNameChange}
               className="block py-2.5 px-0 w-full text-md text-gray-900 bg-transparent border-0 border-b-2 border-gray-900 appearance-none focus:outline-none focus:ring-0 focus:border-black peer"
               placeholder=""
               required
@@ -20,6 +75,7 @@ const SignUp = ({ onSwitch }) => {
           <div className="relative z-0 w-full mb-5 group">
             <input
               type="text"
+              onChange={handleLastNameChange}
               className="block py-2.5 px-0 w-full text-md text-gray-900 bg-transparent border-0 border-b-2 border-gray-900 appearance-none focus:outline-none focus:ring-0 focus:border-black peer"
               placeholder=""
               required
@@ -32,6 +88,7 @@ const SignUp = ({ onSwitch }) => {
         <div className="relative z-0 mb-8 group">
           <input
             type="email"
+            onChange={handleEmailChange}
             className="block py-2.5 px-0 w-full text-md text-gray-900 bg-transparent border-0 border-b-2 border-gray-900 appearance-none focus:outline-none focus:ring-0 focus:border-black peer"
             placeholder=" "
             required
@@ -46,6 +103,7 @@ const SignUp = ({ onSwitch }) => {
         <div className="relative z-0 mb-2 group ">
           <input
             type="password"
+            onChange={handlePasswordChange}
             className="block py-2.5 px-0 w-full text-md text-gray-900 bg-transparent border-0 border-b-2 border-gray-900 appearance-none focus:outline-none focus:ring-0 focus:border-black peer"
             placeholder=" "
             required
@@ -58,7 +116,10 @@ const SignUp = ({ onSwitch }) => {
           </label>
         </div>
         <div className="flex justify-center mb-12">
-          <button className="bg-[#686968] py-3 rounded-[48px] mt-8 text-white w-1/2 hover:bg-gray-800">
+          <button
+            onClick={handleSubmit}
+            className="bg-[#686968] py-3 rounded-[48px] mt-8 text-white w-1/2 hover:bg-gray-800"
+          >
             Sign up
           </button>
         </div>
