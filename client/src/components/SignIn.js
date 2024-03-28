@@ -66,18 +66,18 @@ const SignIn = ({ onSwitch }) => {
           <div className="flex justify-center mb-12">
             <button
               type="submit"
-              className="bg-[#686968] py-3 rounded-[48px] mt-8 text-white w-1/2 hover:bg-gray-800"
+              className="bg-[#686968] py-3 rounded-[48px] text-white w-1/2 hover:bg-gray-800"
             >
               Sign in
             </button>
           </div>
         </form>
-        <div className="flex items-center justify-center space-x-2 mb-12">
+        <div className="flex items-center justify-center space-x-2">
           <div className="flex-1 border-t border-gray-800"></div>
           <span>or</span>
           <div className="flex-1 border-t border-gray-800"></div>
         </div>
-        <div className="flex justify-center px-4 mb-12">
+        <div className="flex justify-center px-4">
           <button className="bg-transparent py-2 md:py-3 text-black w-full sm:w-auto flex items-center justify-center">
             <GoogleIcon className="w-6 h-6 mx-2" />
             <span className="text-sm md:text-base mx-2">
