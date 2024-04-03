@@ -1,7 +1,23 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
+import { UserContext } from "../context/UserContext";
+import { getAuth, signOut } from "firebase/auth";
 
 const NavBar = () => {
+  const user = useContext(UserContext);
+
+  const handleSignOut = () => {
+    // Implement sign out logic here
+    const auth = getAuth();
+    signOut(auth)
+      .then(() => {
+        console.log("User signed out successfully");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   return (
     <React.Fragment>
       <nav className="dark:bg-gray-900 border-b-2">
@@ -13,10 +29,14 @@ const NavBar = () => {
           <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
             <button
               type="button"
+              onClick={handleSignOut}
               className="text-black focus:ring-4 focus:outline-none hover:underline hover:text-gray-500 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             >
               SignOut
             </button>
+            <span className="text-gray-500 dark:text-gray-400">
+              {user ? user.email : "Guest"}
+            </span>
             <button
               data-collapse-toggle="navbar-cta"
               type="button"

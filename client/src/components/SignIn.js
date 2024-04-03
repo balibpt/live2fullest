@@ -1,9 +1,15 @@
 import React, { useState } from "react";
 import GoogleIcon from "../assets/icons/GoogleIcon.js";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
 const SignIn = ({ onSwitch }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const navigate = useNavigate();
+
+  const auth = getAuth();
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -16,8 +22,15 @@ const SignIn = ({ onSwitch }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle form submission logic here
-    console.log("Email:", email);
-    console.log("Password:", password);
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        console.log("User signed in successfully", user);
+        navigate("/home");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
@@ -63,7 +76,7 @@ const SignIn = ({ onSwitch }) => {
               <a href=" ">Forgot password?</a>
             </div>
           </div>
-          <div className="flex justify-center mb-12">
+          <div className="flex justify-center mb-6">
             <button
               type="submit"
               className="bg-[#686968] py-3 rounded-[48px] text-white w-1/2 hover:bg-gray-800"
@@ -72,7 +85,7 @@ const SignIn = ({ onSwitch }) => {
             </button>
           </div>
         </form>
-        <div className="flex items-center justify-center space-x-2">
+        <div className="flex items-center justify-center space-x-2 mb-4">
           <div className="flex-1 border-t border-gray-800"></div>
           <span>or</span>
           <div className="flex-1 border-t border-gray-800"></div>

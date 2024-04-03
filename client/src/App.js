@@ -5,6 +5,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Events from "./views/Events";
 import About from "./views/About";
 import Home from "./views/Home";
+import { UserProvider } from "./context/UserContext";
+import AuthWrapper from "./components/AuthWrapper";
 
 const router = createBrowserRouter([
   {
@@ -13,22 +15,36 @@ const router = createBrowserRouter([
   },
   {
     path: "/home",
-    element: <Home />,
+    element: (
+      <AuthWrapper>
+        <Home />
+      </AuthWrapper>
+    ),
   },
   {
     path: "/events",
-    element: <Events />,
+    element: (
+      <AuthWrapper>
+        <Events />
+      </AuthWrapper>
+    ),
   },
   {
     path: "/about",
-    element: <About />,
+    element: (
+      <AuthWrapper>
+        <About />
+      </AuthWrapper>
+    ),
   },
 ]);
 
 function App() {
   return (
     <React.Fragment>
-      <RouterProvider router={router} />
+      <UserProvider>
+        <RouterProvider router={router} />
+      </UserProvider>
     </React.Fragment>
   );
 }
