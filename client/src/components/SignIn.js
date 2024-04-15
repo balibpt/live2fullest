@@ -1,7 +1,14 @@
 import React, { useState } from "react";
 import GoogleIcon from "../assets/icons/GoogleIcon.js";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  setPersistence,
+  browserSessionPersistence,
+  browserLocalPersistence,
+} from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import firebase from "firebase/app";
 
 const SignIn = ({ onSwitch }) => {
   const [email, setEmail] = useState("");
@@ -22,15 +29,18 @@ const SignIn = ({ onSwitch }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle form submission logic here
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        console.log("User signed in successfully", user);
-        navigate("/home");
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+
+    setPersistence(auth, browserLocalPersistence).then(() => {
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          console.log("User signed in successfully", user);
+          navigate("/home");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    });
   };
 
   return (

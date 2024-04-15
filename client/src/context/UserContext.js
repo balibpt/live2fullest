@@ -1,10 +1,11 @@
+// UserProvider.js
 import React, { createContext, useState, useEffect } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
-export const UserContext = createContext(null);
+export const UserContext = createContext(undefined);
 
 export const UserProvider = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState(undefined);
 
   useEffect(() => {
     const auth = getAuth();
