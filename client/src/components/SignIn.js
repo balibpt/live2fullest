@@ -4,11 +4,9 @@ import {
   getAuth,
   signInWithEmailAndPassword,
   setPersistence,
-  browserSessionPersistence,
   browserLocalPersistence,
 } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import firebase from "firebase/app";
 
 const SignIn = ({ onSwitch }) => {
   const [email, setEmail] = useState("");

@@ -4,7 +4,7 @@ import Footer from "../components/Footer";
 import PaintIcon from "../assets/icons/PaintIcon.js";
 import LightIcon from "../assets/icons/LightIcon.js";
 import GlobeIcon from "../assets/icons/Globe.js";
-import homeImage from "../assets/images/homeImage.jpeg";
+//import homeImage from "../assets/images/homeImage.jpeg";
 
 const Home = () => {
   return (
@@ -19,10 +19,9 @@ const Home = () => {
                   Choose Your Path, Set Your Pace
                 </h1>
                 <p className="text-xl text-white mb-8 max-w-3xl mx-auto">
-                  Where passion meets potential. Dive into a community of
-                  visionaries and creators, collaborating for personal and
-                  societal transformation. Elevate your journey in a space where
-                  every experience enriches your story.
+                  Live2Fullest is a community of like-minded individuals who
+                  come together to unleash their potential for the betterment of
+                  self and society.
                 </p>
                 <button className="bg-white text-blue-600 font-semibold py-3 px-8 rounded-full shadow-lg hover:bg-blue-100 transition duration-300">
                   Get Started
@@ -51,9 +50,12 @@ const Home = () => {
                   <div className="flex items-center justify-center mb-6">
                     <PaintIcon className="w-12 h-12 text-blue-500" />
                   </div>
-                  <h3 className="text-2xl font-semibold text-center mb-4">
-                    Avocation
+                  <h3 className="text-2xl font-semibold text-center mb-3">
+                    Social
                   </h3>
+                  <p className="text-black text-center font-bold mb-2">
+                    Physical and mental well-being
+                  </p>
                   <p className="text-gray-600 text-center">
                     Discover and delve into activities that fuel your passion,
                     hone your skills in a supportive space, and explore your
@@ -62,28 +64,34 @@ const Home = () => {
                 </div>
                 <div className="bg-white rounded-lg shadow-lg p-8">
                   <div className="flex items-center justify-center mb-6">
-                    <GlobeIcon className="w-12 h-12 text-blue-500" />
-                  </div>
-                  <h3 className="text-2xl font-semibold text-center mb-4">
-                    Giving Back
-                  </h3>
-                  <p className="text-gray-600 text-center">
-                    Engage in meaningful initiatives to give back to the
-                    community, share your expertise, and make a lasting,
-                    positive impact.
-                  </p>
-                </div>
-                <div className="bg-white rounded-lg shadow-lg p-8">
-                  <div className="flex items-center justify-center mb-6">
                     <LightIcon className="w-12 h-12 text-blue-500" />
                   </div>
-                  <h3 className="text-2xl font-semibold text-center mb-4">
+                  <h3 className="text-2xl font-semibold text-center mb-3">
                     Professional Growth
                   </h3>
+                  <p className="text-black text-center font-bold mb-2">
+                    Enabling path to desired paid job or start-up
+                  </p>
                   <p className="text-gray-600 text-center">
                     Elevate your career through continuous learning,
                     professional development opportunities, and networking with
                     peers and industry leaders.
+                  </p>
+                </div>
+                <div className="bg-white rounded-lg shadow-lg p-8">
+                  <div className="flex items-center justify-center mb-6">
+                    <GlobeIcon className="w-12 h-12 text-blue-500" />
+                  </div>
+                  <h3 className="text-2xl font-semibold text-center mb-3">
+                    Giving Back
+                  </h3>
+                  <p className="text-black text-center font-bold mb-2">
+                    Strategic partnership (private/public)
+                  </p>
+                  <p className="text-gray-600 text-center">
+                    Engage in meaningful initiatives to give back to the
+                    community, share your expertise, and make a lasting,
+                    positive impact.
                   </p>
                 </div>
               </div>
