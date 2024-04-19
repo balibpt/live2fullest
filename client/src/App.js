@@ -5,6 +5,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Events from "./views/Events";
 import About from "./views/About";
 import Home from "./views/Home";
+import Members from "./views/Members";
 import { UserProvider } from "./context/UserContext";
 import AuthWrapper from "./components/AuthWrapper";
 
@@ -26,6 +27,14 @@ const router = createBrowserRouter([
     element: (
       <AuthWrapper>
         <Events />
+      </AuthWrapper>
+    ),
+  },
+  {
+    path: "/members",
+    element: (
+      <AuthWrapper>
+        <Members />
       </AuthWrapper>
     ),
   },
