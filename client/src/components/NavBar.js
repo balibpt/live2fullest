@@ -1,19 +1,36 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
-
 import { getAuth, signOut } from "firebase/auth";
+import { db } from "../firebase-config";
+import { collection, query, where, getDocs } from "firebase/firestore";
 import ProfileIcon from "../assets/icons/ProfileIcon";
 
 const NavBar = () => {
   const auth = getAuth();
-  const user = auth.currentUser;
+  const [currentUser, setCurrentUser] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      const user = auth.currentUser;
+      if (user) {
+        const usersCollectionRef = collection(db, "users");
+        const q = query(usersCollectionRef, where("uid", "==", user.uid));
+        const querySnapshot = await getDocs(q);
+        if (!querySnapshot.empty) {
+          const userDoc = querySnapshot.docs[0];
+          const userData = userDoc.data();
+          setCurrentUser(userData);
+        }
+      }
+    };
+
+    fetchCurrentUser();
+  }, [auth]);
+
   const handleSignOut = () => {
-    // Implement sign out logic here
-    const auth = getAuth();
     signOut(auth)
       .then(() => {
         console.log("User signed out successfully");
@@ -59,11 +76,11 @@ const NavBar = () => {
                 onClick={toggleDropdown}
                 className="flex items-center focus:outline-none"
               >
-                {user.photoURL ? (
+                {currentUser && currentUser.photoURL ? (
                   <img
-                    src={user.photoURL}
+                    src={currentUser.photoURL}
                     alt="User Profile"
-                    className="w-10 h-10 rounded-full"
+                    className="w-10 h-10 rounded-full object-cover"
                   />
                 ) : (
                   <ProfileIcon className="w-10 h-10 text-gray-400 rounded-full" />
@@ -71,12 +88,14 @@ const NavBar = () => {
               </button>
               {isDropdownOpen && (
                 <div className="absolute right-0 mt-2 py-2 w-48 bg-white rounded-md shadow-lg z-10">
-                  <Link
-                    to={`/profile/${user.uid}`}
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    My Profile
-                  </Link>
+                  {currentUser && (
+                    <Link
+                      to={`/profile/${currentUser.uid}`}
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      My Profile
+                    </Link>
+                  )}
                   <button
                     type="button"
                     onClick={handleSignOut}
