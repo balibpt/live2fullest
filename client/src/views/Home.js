@@ -4,6 +4,7 @@ import Footer from "../components/Footer";
 import PaintIcon from "../assets/icons/PaintIcon.js";
 import LightIcon from "../assets/icons/LightIcon.js";
 import GlobeIcon from "../assets/icons/Globe.js";
+import { Link } from "react-router-dom";
 //import homeImage from "../assets/images/homeImage.jpeg";
 
 const Home = () => {
@@ -24,7 +25,7 @@ const Home = () => {
                   self and society.
                 </p>
                 <button className="bg-white text-blue-600 font-semibold py-3 px-8 rounded-full shadow-lg hover:bg-blue-100 transition duration-300">
-                  Get Started
+                  <Link to="/members">View Members</Link>
                 </button>
               </div>
             </div>
@@ -260,7 +261,7 @@ const Home = () => {
           <section className="px-20 mb-8">
             <div className="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg shadow-lg py-12 px-8">
               <h2 className="text-3xl font-semibold mb-6 text-white">
-                Become a Founding Member
+                Founding Members
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
@@ -333,18 +334,17 @@ const Home = () => {
                 </div>
                 <div className="bg-white rounded-lg shadow-lg p-8">
                   <h3 className="text-2xl font-semibold mb-4">
-                    Annual Membership Fee
+                    Founding Member Invitations
                   </h3>
-                  <div className="flex items-center justify-center mb-6">
-                    <span className="text-4xl font-bold">$180</span>
-                    <span className="text-gray-600 ml-2">/ year</span>
-                  </div>
                   <p className="text-gray-600 mb-6">
-                    Your annual membership fee allows you to participate in 4
-                    local events of your interest.
+                    Founding memberships are available by invitation only. We
+                    are currently not accepting new founding members.
                   </p>
-                  <button className="bg-blue-500 text-white px-6 py-3 rounded-md w-full">
-                    Join as a Founding Member
+                  <button
+                    className="bg-gray-400 text-white px-6 py-3 rounded-md w-full cursor-not-allowed"
+                    disabled
+                  >
+                    Invitations Closed
                   </button>
                 </div>
               </div>
