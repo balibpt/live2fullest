@@ -56,7 +56,7 @@ const Events = () => {
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [events]);
 
   const handleCreateEvent = async (eventData) => {
     // Create a new event document in Firestore
