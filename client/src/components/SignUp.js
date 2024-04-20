@@ -132,6 +132,8 @@ const SignUp = ({ onSwitch }) => {
             linkedin: "",
             instagram: "",
           },
+          founderMember: true,
+          admin: false,
         });
       })
       .then(() => {
