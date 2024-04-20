@@ -122,6 +122,17 @@ const SignUp = ({ onSwitch }) => {
           firstName: firstName,
           lastName: lastName,
           email: user.email,
+          jobTitle: "",
+          description: "",
+          resumeURL: "",
+          socialLinks: {
+            whatsapp: "",
+            telegram: "",
+            facebook: "",
+            discord: "",
+            linkedin: "",
+            instagram: "",
+          },
         });
       })
       .then(() => {

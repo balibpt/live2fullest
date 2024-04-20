@@ -1,23 +1,32 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { getAuth } from "firebase/auth";
-import { db } from "../firebase-config";
+import { db, storage } from "../firebase-config";
 import {
   collection,
   query,
   getDocs,
   where,
-  doc,
   updateDoc,
 } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import Modal from "react-modal";
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
 import ProfileIcon from "../assets/icons/ProfileIcon";
+import DiscordIcon from "../assets/icons/DiscordIcon";
+import FacebookIcon from "../assets/icons/FacebookIcon";
+import WhatsappIcon from "../assets/icons/WhatsappIcon";
+import TelegramIcon from "../assets/icons/TelegramIcon";
+import LinkedinIcon from "../assets/icons/LinkedinIcon";
+import InstagramIcon from "../assets/icons/InstagramIcon";
 
 const Profile = () => {
   const { uid } = useParams();
   const [user, setUser] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [isResumeModalOpen, setIsResumeModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -76,20 +85,50 @@ const Profile = () => {
 
   const handleConfirmEdit = async () => {
     try {
-      const userDocRef = doc(db, "users", uid);
-      await updateDoc(userDocRef, formData);
-      setUser(formData);
-      setIsEditing(false);
+      const auth = getAuth();
+      const user = auth.currentUser;
+      const usersCollectionRef = collection(db, "users");
+
+      const q = query(usersCollectionRef, where("uid", "==", user.uid));
+      const querySnapshot = await getDocs(q);
+
+      if (!querySnapshot.empty) {
+        const userDoc = querySnapshot.docs[0];
+        await updateDoc(userDoc.ref, formData);
+        setUser(formData);
+        setIsEditing(false);
+        // Show a loader animation while updating
+        setIsUpdating(true);
+        setTimeout(() => {
+          setIsUpdating(false);
+          window.location.reload(); // Refresh the page after successful update
+        }, 2000); // Adjust the delay as needed
+      } else {
+        console.log("User document not found!");
+      }
     } catch (error) {
       console.log("Error updating user:", error);
     }
   };
 
-  const handleInputChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+  const handleInputChange = async (e) => {
+    if (e.target.name === "resumeURL") {
+      const file = e.target.files[0];
+      if (file) {
+        const storageRef = ref(storage, `users/${uid}/resume`);
+        await uploadBytes(storageRef, file);
+        const downloadURL = await getDownloadURL(storageRef);
+        setFormData({
+          ...formData,
+          resumeURL: downloadURL,
+        });
+      }
+    } else {
+      setFormData({
+        ...formData,
+        [e.target.name]: e.target.value,
+      });
+    }
   };
 
   const handleSocialLinkChange = (platform, value) => {
@@ -100,6 +139,34 @@ const Profile = () => {
         [platform]: value,
       },
     });
+  };
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const storageRef = ref(storage, `users/${uid}/profile-image`);
+      await uploadBytes(storageRef, file);
+      const downloadURL = await getDownloadURL(storageRef);
+
+      try {
+        const auth = getAuth();
+        const user = auth.currentUser;
+        const usersCollectionRef = collection(db, "users");
+
+        const q = query(usersCollectionRef, where("uid", "==", user.uid));
+        const querySnapshot = await getDocs(q);
+
+        if (!querySnapshot.empty) {
+          const userDoc = querySnapshot.docs[0];
+          await updateDoc(userDoc.ref, { photoURL: downloadURL });
+          setUser((prevUser) => ({ ...prevUser, photoURL: downloadURL }));
+        } else {
+          console.log("User document not found!");
+        }
+      } catch (error) {
+        console.log("Error updating user document:", error);
+      }
+    }
   };
 
   if (!user) {
@@ -117,7 +184,7 @@ const Profile = () => {
                 <div className="w-32 h-32 rounded-full mx-auto bg-gray-200 flex items-center justify-center">
                   {user.photoURL ? (
                     <img
-                      className="w-32 h-32 rounded-full"
+                      className="w-32 h-32 rounded-full object-cover"
                       src={user.photoURL}
                       alt="Profile"
                     />
@@ -126,25 +193,57 @@ const Profile = () => {
                   )}
                 </div>
                 {currentUser.uid === uid && (
-                  <button
-                    onClick={handleEditProfile}
-                    className="absolute bottom-0 right-0 bg-blue-500 text-white rounded-full p-2 hover:bg-blue-600 focus:outline-none"
-                  >
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
+                  <>
+                    <button
+                      onClick={handleEditProfile}
+                      className="absolute bottom-0 right-0 bg-blue-500 text-white rounded-full p-2 hover:bg-blue-600 focus:outline-none"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-                      />
-                    </svg>
-                  </button>
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                        />
+                      </svg>
+                    </button>
+                    {isEditing && (
+                      <>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleImageUpload}
+                          className="hidden"
+                          id="profileImageInput"
+                        />
+                        <label
+                          htmlFor="profileImageInput"
+                          className="absolute bottom-0 left-0 bg-blue-500 text-white rounded-full p-2 hover:bg-blue-600 focus:outline-none cursor-pointer"
+                        >
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                            />
+                          </svg>
+                        </label>
+                      </>
+                    )}
+                  </>
                 )}
               </div>
               <div className="mt-8">
@@ -155,7 +254,7 @@ const Profile = () => {
                       name="firstName"
                       value={formData.firstName}
                       onChange={handleInputChange}
-                      className="block w-full border-b-2 border-gray-300 py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-blue-500"
+                      className="block w-full rounded-lg border-2 border-gray-300 py-2 px-4 mb-4 leading-tight focus:outline-none focus:border-blue-500"
                       placeholder="First Name"
                     />
                     <input
@@ -163,7 +262,7 @@ const Profile = () => {
                       name="lastName"
                       value={formData.lastName}
                       onChange={handleInputChange}
-                      className="block w-full border-b-2 border-gray-300 py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-blue-500"
+                      className="block w-full rounded-lg border-2 border-gray-300 py-2 px-4 mb-4 leading-tight focus:outline-none focus:border-blue-500"
                       placeholder="Last Name"
                     />
                   </>
@@ -178,7 +277,7 @@ const Profile = () => {
                     name="jobTitle"
                     value={formData.jobTitle}
                     onChange={handleInputChange}
-                    className="block w-full border-b-2 border-gray-300 py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-blue-500"
+                    className="block w-full rounded-lg border-2 border-gray-300 py-2 px-4 mb-4 leading-tight focus:outline-none focus:border-blue-500"
                     placeholder="Job Title"
                   />
                 ) : (
@@ -192,7 +291,7 @@ const Profile = () => {
                   Social Links
                 </h3>
                 {Object.entries(formData.socialLinks).map(([platform, url]) => (
-                  <div key={platform} className="flex items-center mb-2">
+                  <div key={platform} className="flex items-center mb-4">
                     {isEditing ? (
                       <input
                         type="text"
@@ -201,7 +300,7 @@ const Profile = () => {
                         onChange={(e) =>
                           handleSocialLinkChange(platform, e.target.value)
                         }
-                        className="block w-full border-b-2 border-gray-300 py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-blue-500"
+                        className="block w-full rounded-lg border-2 border-gray-300 py-2 px-4 leading-tight focus:outline-none focus:border-blue-500"
                         placeholder={`${platform} URL`}
                       />
                     ) : url ? (
@@ -209,14 +308,28 @@ const Profile = () => {
                         href={url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-blue-500 hover:underline"
+                        className="flex items-center text-blue-500 hover:underline"
                       >
-                        <img
-                          className="w-6 h-6 mr-2"
-                          src={`/${platform}.svg`}
-                          alt={platform}
-                        />
-                        {platform}
+                        {platform === "discord" && (
+                          <DiscordIcon className="w-6 h-6 mr-2" />
+                        )}
+                        {platform === "facebook" && (
+                          <FacebookIcon className="w-6 h-6 mr-2" />
+                        )}
+                        {platform === "whatsapp" && (
+                          <WhatsappIcon className="w-6 h-6 mr-2" />
+                        )}
+                        {platform === "telegram" && (
+                          <TelegramIcon className="w-6 h-6 mr-2" />
+                        )}
+                        {platform === "linkedin" && (
+                          <LinkedinIcon className="w-6 h-6 mr-2" />
+                        )}
+                        {platform === "instagram" && (
+                          <InstagramIcon className="w-6 h-6 mr-2" />
+                        )}
+
+                        <span>{platform}</span>
                       </a>
                     ) : null}
                   </div>
@@ -237,7 +350,7 @@ const Profile = () => {
                   name="description"
                   value={formData.description}
                   onChange={handleInputChange}
-                  className="block w-full border-b-2 border-gray-300 py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-blue-500"
+                  className="block w-full rounded-lg border-2 border-gray-300 py-2 px-4 mb-4 leading-tight focus:outline-none focus:border-blue-500"
                   rows={5}
                   placeholder="Write a brief description about yourself"
                 />
@@ -256,19 +369,40 @@ const Profile = () => {
                     <input
                       type="file"
                       name="resumeURL"
-                      accept=".doc,.docx,.pdf"
+                      accept=".pdf"
                       onChange={handleInputChange}
-                      className="block w-full border-b-2 border-gray-300 py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-blue-500"
+                      className="block w-full rounded-lg border-2 border-gray-300 py-2 px-4 mb-4 leading-tight focus:outline-none focus:border-blue-500"
                     />
                   ) : user.resumeURL ? (
-                    <a
-                      href={user.resumeURL}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-500 hover:underline"
-                    >
-                      View Resume
-                    </a>
+                    <>
+                      <button
+                        onClick={() => setIsResumeModalOpen(true)}
+                        className="text-blue-500 hover:underline"
+                      >
+                        View Resume
+                      </button>
+                      <Modal
+                        isOpen={isResumeModalOpen}
+                        onRequestClose={() => setIsResumeModalOpen(false)}
+                        contentLabel="Resume Modal"
+                        className="modal"
+                        overlayClassName="modal-overlay"
+                      >
+                        <div className="modal-content">
+                          <h2>Resume</h2>
+                          {/* Render the resume content */}
+                          <iframe
+                            src={user.resumeURL}
+                            width="100%"
+                            height="500px"
+                            title="Resume"
+                          />
+                          <button onClick={() => setIsResumeModalOpen(false)}>
+                            Close
+                          </button>
+                        </div>
+                      </Modal>
+                    </>
                   ) : (
                     <p className="text-gray-500 text-sm">
                       Upload a resume or detailed document about yourself
@@ -280,9 +414,36 @@ const Profile = () => {
                 <div className="mt-8">
                   <button
                     onClick={handleConfirmEdit}
-                    className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 focus:outline-none"
+                    className="bg-blue-500 text-white rounded-lg py-2 px-4 hover:bg-blue-600 focus:outline-none"
+                    disabled={isUpdating}
                   >
-                    Save Changes
+                    {isUpdating ? (
+                      <div className="flex items-center justify-center">
+                        <svg
+                          className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          ></circle>
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
+                        </svg>
+                        Updating...
+                      </div>
+                    ) : (
+                      "Save Changes"
+                    )}
                   </button>
                 </div>
               )}
