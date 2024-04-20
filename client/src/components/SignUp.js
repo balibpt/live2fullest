@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import GoogleIcon from "../assets/icons/GoogleIcon.js";
 import { db, auth } from "../firebase-config.js";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { collection, addDoc } from "firebase/firestore";
@@ -258,19 +257,6 @@ const SignUp = ({ onSwitch }) => {
               <span className="text-red-500 text-sm">{error.auth}</span>
             )}
           </span>
-        </div>
-        <div className="flex items-center justify-center space-x-2 mb-5">
-          <div className="flex-1 border-t border-gray-800"></div>
-          <span>or</span>
-          <div className="flex-1 border-t border-gray-800"></div>
-        </div>
-        <div className="flex justify-center px-4 mb-5">
-          <button className="bg-transparent py-2 md:py-3 text-black w-full sm:w-auto flex items-center justify-center">
-            <GoogleIcon className="w-6 h-6 mx-2" />
-            <span className="text-sm md:text-base mx-2">
-              Continue with Google
-            </span>
-          </button>
         </div>
       </div>
       <div className="flex justify-center mt-5">

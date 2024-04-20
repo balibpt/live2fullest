@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import GoogleIcon from "../assets/icons/GoogleIcon.js";
 import {
   getAuth,
   signInWithEmailAndPassword,
@@ -93,19 +92,6 @@ const SignIn = ({ onSwitch }) => {
             </button>
           </div>
         </form>
-        <div className="flex items-center justify-center space-x-2 mb-4">
-          <div className="flex-1 border-t border-gray-800"></div>
-          <span>or</span>
-          <div className="flex-1 border-t border-gray-800"></div>
-        </div>
-        <div className="flex justify-center px-4">
-          <button className="bg-transparent py-2 md:py-3 text-black w-full sm:w-auto flex items-center justify-center">
-            <GoogleIcon className="w-6 h-6 mx-2" />
-            <span className="text-sm md:text-base mx-2">
-              Continue with Google
-            </span>
-          </button>
-        </div>
       </div>
       <div className="flex justify-center mt-10">
         <span className="mr-1">New Members?</span>
