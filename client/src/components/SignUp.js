@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { db, auth } from "../firebase-config.js";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  setPersistence,
+  browserLocalPersistence,
+} from "firebase/auth";
 import { collection, addDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 
@@ -138,6 +142,9 @@ const SignUp = ({ onSwitch }) => {
       })
       .then(() => {
         console.log("User created successfully");
+        return setPersistence(auth, browserLocalPersistence);
+      })
+      .then(() => {
         navigate("/home");
       })
       .catch((error) => {

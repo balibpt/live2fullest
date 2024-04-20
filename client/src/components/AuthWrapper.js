@@ -4,14 +4,14 @@ import { UserContext } from "../context/UserContext";
 import { Navigate } from "react-router-dom";
 
 const AuthWrapper = ({ children }) => {
-  const user = useContext(UserContext);
+  const { currentUser, loading } = useContext(UserContext);
 
-  if (user === undefined) {
+  if (loading) {
     // Authentication state is still being determined
-    return null;
+    return <div>Loading...</div>; // You can replace this with a loading spinner or any other loading indicator
   }
 
-  if (!user) {
+  if (!currentUser) {
     // User is not authenticated, redirect to the login page
     return <Navigate to="/" replace />;
   }
