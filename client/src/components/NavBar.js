@@ -66,7 +66,7 @@ const NavBar = () => {
       <nav className="bg-white border-b-2">
         <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
           <span className="self-center text-2xl font-semibold whitespace-nowrap text-transparent bg-gradient-to-r from-[#5EBAFB] via-[#EE44F7] to-[#5EBAFB] bg-clip-text font-['Roboto',_sans-serif]">
-            Live2Fullest
+            <Link to="/home">Live2Fullest</Link>
           </span>
 
           <div className="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">

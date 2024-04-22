@@ -154,7 +154,7 @@ const SignUp = ({ onSwitch }) => {
 
   return (
     <React.Fragment>
-      <div className="w-3/4">
+      <div className="w-full md:w-3/4">
         <div className="grid md:grid-cols-2 md:gap-6">
           <div className="relative z-0 w-full mb-5 group">
             <input
@@ -200,7 +200,7 @@ const SignUp = ({ onSwitch }) => {
             required
           />
           <label
-            for="floating_email"
+            htmlFor="floating_email"
             className="peer-focus:font-medium absolute text-md text-gray-900 dark:text-gray</div>-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-black peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
           >
             Email
@@ -240,7 +240,7 @@ const SignUp = ({ onSwitch }) => {
             required
           />
           <label
-            for="floating_email"
+            htmlFor="floating_email"
             className="peer-focus:font-medium absolute text-md text-gray-900 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-black peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
           >
             Confirm Password
@@ -256,7 +256,7 @@ const SignUp = ({ onSwitch }) => {
         <div className="flex flex-col items-center justify-center mb-5">
           <button
             onClick={handleSubmit}
-            className="bg-[#686968] py-3 rounded-[48px] mt-8 text-white w-1/2 hover:bg-gray-800 hover:cusor-pointer disabled:bg-gray-400 disabled:cursor-not-allowed"
+            className="bg-[#686968] py-3 rounded-[48px] mt-8 text-white w-full md:w-1/2 hover:bg-gray-800 hover:cusor-pointer disabled:bg-gray-400 disabled:cursor-not-allowed"
             disabled={!formValidated}
           >
             Sign up

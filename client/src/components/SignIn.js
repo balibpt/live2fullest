@@ -42,7 +42,7 @@ const SignIn = ({ onSwitch }) => {
 
   return (
     <React.Fragment>
-      <div className="w-3/4">
+      <div className="w-full md:w-3/4">
         <form onSubmit={handleSubmit}>
           <div className="relative z-0 mb-8 group">
             <input
@@ -86,7 +86,7 @@ const SignIn = ({ onSwitch }) => {
           <div className="flex justify-center mb-6">
             <button
               type="submit"
-              className="bg-[#686968] py-3 rounded-[48px] text-white w-1/2 hover:bg-gray-800"
+              className="bg-[#686968] py-3 rounded-[48px] text-white w-full md:w-1/2 hover:bg-gray-800"
             >
               Sign in
             </button>
