@@ -9,6 +9,7 @@ import Members from "./views/Members";
 import Profile from "./views/Profile";
 import { UserProvider } from "./context/UserContext";
 import AuthWrapper from "./components/AuthWrapper";
+import { Wrapper } from "@googlemaps/react-wrapper";
 
 const router = createBrowserRouter([
   {
@@ -58,11 +59,17 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
+  const libraries = ["places"];
   return (
     <React.Fragment>
-      <UserProvider>
-        <RouterProvider router={router} />
-      </UserProvider>
+      <Wrapper
+        apiKey={process.env.REACT_APP_FIREBASE_API_KEY}
+        libraries={libraries}
+      >
+        <UserProvider>
+          <RouterProvider router={router} />
+        </UserProvider>
+      </Wrapper>
     </React.Fragment>
   );
 }
