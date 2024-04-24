@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 const SignIn = ({ onSwitch }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
 
   const navigate = useNavigate();
 
@@ -35,6 +36,7 @@ const SignIn = ({ onSwitch }) => {
           navigate("/home");
         })
         .catch((error) => {
+          setError(error.message);
           console.log(error);
         });
     });
@@ -83,6 +85,7 @@ const SignIn = ({ onSwitch }) => {
               <a href=" ">Forgot password?</a>
             </div>
           </div>
+          {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
           <div className="flex justify-center mb-6">
             <button
               type="submit"

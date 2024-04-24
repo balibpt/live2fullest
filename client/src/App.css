@@ -87,3 +87,71 @@ select:-webkit-autofill:focus {
   padding: 0px; /* Adjust padding to change the inner spacing */
   height: 50px; /* Adjust height as needed */
 }
+
+@media (min-width: 1920px) {
+  /* Styles for 1080p resolution */
+  .max-w-7xl {
+    max-width: 1280px;
+    max-height: 720px;
+  }
+
+  .text-4xl {
+    font-size: 2.25rem;
+  }
+
+  .sm\:text-5xl {
+    font-size: 3rem;
+  }
+
+  .md\:text-6xl {
+    font-size: 3.75rem;
+  }
+
+  .lg\:text-7xl {
+    font-size: 4.5rem;
+  }
+
+  .xl\:text-8xl {
+    font-size: 6rem;
+  }
+}
+
+@media (min-width: 2560px) {
+  /* Styles for 1440p resolution */
+  .max-w-7xl {
+    max-width: 1536px;
+    max-height: 864px;
+  }
+}
+
+@media (min-width: 3840px) {
+  /* Styles for 4K resolution */
+  .max-w-7xl {
+    max-width: 2560px;
+    max-height: 1440px;
+  }
+}
+
+@media (min-width: 5120px) {
+  /* Styles for 5K resolution */
+  .max-w-7xl {
+    max-width: 3840px;
+    max-height: 2160px;
+  }
+}
+
+.h-screen-1080p {
+  height: 720px;
+}
+
+.h-screen-1440p {
+  height: 864px;
+}
+
+.h-screen-4k {
+  height: 1440px;
+}
+
+.h-screen-5k {
+  height: 2160px;
+}
